@@ -34,8 +34,10 @@ mongoose.Promise = global.Promise;
 mongoose.connect(dbConfig.MONGO_URI, { useNewUrlParser: true });
 
 const auth = require('./routes/authRoutes');
+const posts = require('./routes/postRoutes');
 
 app.use('/api/chatapp', auth);
+app.use('/api/chatapp', posts);
 
 app.listen(3000, () => {
   console.log('Running on port 3000');
