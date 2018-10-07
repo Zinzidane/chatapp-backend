@@ -5,8 +5,11 @@ const dbConfig = require('../config/secret');
 
 module.exports = {
   VerifyToken: (req, res, next) => {
+    if(!req.headers.authorization) {
+      return res.status(HttpStatus.UNAUTHORIZED).json({message: 'No Authorization'});
+    }
     // Check if token exists in cookies
-    const token = req.cookies.auth;
+    const token = req.cookies.auth || req.headers.authorization.split(' ')[1];
 
     if(!token) {
       return res.status(HttpStatus.FORBIDDEN).json({message: 'No token provided'});
