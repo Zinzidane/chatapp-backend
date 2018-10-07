@@ -2,6 +2,7 @@ const Joi = require('joi');
 const HttpStatus = require('http-status-codes');
 
 const Post = require('../models/postModels');
+const User = require('../models/userModels');
 
 module.exports = {
   AddPost(req, res) {
@@ -21,8 +22,18 @@ module.exports = {
       post: req.body.post,
       created: new Date()
     };
-
-    Post.create(body).then(post => {
+    
+    Post.create(body).then(async (post) => {
+      // Updating post in posts array in database for this user
+      await User.update({
+        _id: req.user._id
+      }, {
+        $push: {posts: {
+          postId: post._id,
+          post: req.body.post,
+          created: new Date()
+        }}
+      });
       res.status(HttpStatus.OK).json({message: 'Post created', post});
     }).catch(err => {
       res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({message: 'Error occured'});
