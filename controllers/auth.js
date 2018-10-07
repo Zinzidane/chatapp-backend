@@ -64,7 +64,7 @@ module.exports = {
     }
 
     await User.findOne({
-      username: helpers.firstUpper(req.body.username).then(user => {
+      username: helpers.firstUpper(req.body.username)}).then(user => {
         if(!user) {
           return res.status(HttpStatus.NOT_FOUND).json({message: 'Username not found'});
         }
@@ -80,8 +80,7 @@ module.exports = {
           res.cookie('auth', token);
           return res.status(HttpStatus.OK).json({message: 'Login successful', user, token});
         })
-      })
-    }).catch(err => {
+      }).catch(err => {
       return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({message: 'Error occured'});
     })
   }
