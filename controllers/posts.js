@@ -64,5 +64,20 @@ module.exports = {
       })
       .then(() => res.status(HttpStatus.OK).json({message: 'You liked the post'}))
       .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({message: 'Error occured'}));
+  },
+  async AddComment(req, res) {
+    const postId = req.body.postId;
+    await Post.update({
+      _id: postId
+    }, {
+      $push: { comments: {
+        userId: req.username._id,
+        username: req.user.username,
+        comment: req.body.comment,
+        createdAt: new Date()
+      }}
+    })
+    .then(() => res.status(HttpStatus.OK).json({message: 'Comment added the post'}))
+    .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({message: 'Error occured'}));
   }
 };

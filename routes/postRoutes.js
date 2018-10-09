@@ -7,5 +7,6 @@ const AuthHelper = require('../helpers/AuthHelper');
 router.get('/posts', AuthHelper.VerifyToken, PostCtrl.GetAllPosts);
 router.post('/post/add-post', AuthHelper.VerifyToken, PostCtrl.AddPost);
 router.post('/post/add-like', AuthHelper.VerifyToken, PostCtrl.AddLike);
+router.post('/post/add-comment', AuthHelper.VerifyToken, PostCtrl.AddComment);
 
 module.exports = router;
