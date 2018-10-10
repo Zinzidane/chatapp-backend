@@ -32,10 +32,41 @@ module.exports = {
 
     followUser()
       .then(() => {
-        res.status(HttpStatus.OK).json({message: 'Following user now'})
+        res.status(HttpStatus.OK).json({message: 'Following user now'});
       })
       .catch(err => {
-        res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({message: 'Error occured'})
+        res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({message: 'Error occured'});
+      });
+  },
+  UnfollowUser(req, res) {
+    const unfollowUser = async () => {
+      await User.update({
+          _id: req.user._id
+        }, {
+          $pull: {
+            following: {
+              userFollowed: req.body.userFollowed
+            }
+          }
+      });
+
+      await User.update({
+          _id: req.user.userFollowed
+        }, {
+          $pull: {
+            followers: {
+              follower: req.body._id
+            }
+          }
+      });
+    };
+
+    unfollowUser()
+      .then(() => {
+        res.status(HttpStatus.OK).json({message: 'Unfollowing user now'});
+      })
+      .catch(err => {
+        res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({message: 'Error occured'});
       });
   }
 };
