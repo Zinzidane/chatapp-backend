@@ -72,5 +72,22 @@ module.exports = {
       .catch(err => {
         res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({message: 'Error occured'});
       });
+  },
+  async MarkNotification(req, res) {
+    if(!req.body.deleteValue) {
+      await User.updateOne({
+          _id: req.user._id,
+          'notifications._id': req.params.id
+        }, {
+          $set: {
+            'notifications.$.read': true
+          }
+        }
+      ).then(() => {
+        res.status(HttpStatus.OK).json({message: 'Marked as read'});
+      }).catch(err => {
+        res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({message: 'Error occured'});
+      });
+    }
   }
 };

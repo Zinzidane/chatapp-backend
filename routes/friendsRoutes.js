@@ -6,5 +6,6 @@ const AuthHelper = require('../helpers/AuthHelper');
 
 router.post('/follow-user', AuthHelper.VerifyToken, FriendCtrl.FollowUser);
 router.post('/unfollow-user', AuthHelper.VerifyToken, FriendCtrl.UnfollowUser);
+router.post('/mark/:id', AuthHelper.VerifyToken, FriendCtrl.MarkNotification);
 
 module.exports = router;
