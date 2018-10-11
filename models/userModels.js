@@ -56,6 +56,12 @@ const userSchema = mongoose.Schema({
         default: ''
       }
     }
+  ],
+  chatList: [
+    {
+      userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User'},
+      msgId: { type: mongoose.Schema.Types.ObjectId, ref: 'Message'}
+    }
   ]
 });
 
