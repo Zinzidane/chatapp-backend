@@ -15,7 +15,22 @@ module.exports = {
       ]
     }, async (err, result) => {
       if (result.length > 0) {
-
+        // Update chat list if users were in chat before
+        await Message.update({
+            conversationId: result[0]._id
+          }, {
+            $push: {
+              message: {
+                senderId: req.user._id,
+                receiverId: req.params.receiver_Id,
+                senderName: req.user.username,
+                receiverName: req.body.receiverName,
+                body: req.body.message
+              }
+            }
+          })
+          .then(() => res.status(HttpStatus.OK).json({message: 'Message sent successfully'}))
+          .catch(error => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({message: 'Error occured'}));;
       } else {
         const newConversation = new Conversation();
         newConversation.participants.push({
