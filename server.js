@@ -37,6 +37,7 @@ mongoose.Promise = global.Promise;
 mongoose.connect(dbConfig.MONGO_URI, { useNewUrlParser: true });
 
 require('./socket/streams')(io);
+require('./socket/private')(io);
 
 const auth = require('./routes/authRoutes');
 const posts = require('./routes/postRoutes');
