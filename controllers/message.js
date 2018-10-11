@@ -38,6 +38,40 @@ module.exports = {
           body: req.body.message
         });
 
+        // Update chat list array for sender
+        await User.update({
+          _id: req.user._id
+        }, {
+          $push: {
+            chatList: {
+              $each: [
+                {
+                  receiverId: req.params.receiver_Id,
+                  msgId: newMessage._id
+                }
+              ],
+              $position: 0
+            }
+          }
+        });
+
+        // Update chat list array for receiver
+        await User.update({
+          _id: req.params.receiver_Id
+        }, {
+          $push: {
+            chatList: {
+              $each: [
+                {
+                  receiverId: req.user._id,
+                  msgId: newMessage._id
+                }
+              ],
+              $position: 0
+            }
+          }
+        });
+
         await newMessage
           .save()
           .then(() => res.status(HttpStatus.OK).json({message: 'Message sent'}))
