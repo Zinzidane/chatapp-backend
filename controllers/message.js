@@ -5,6 +5,26 @@ const Conversation = require('../models/conversationModels');
 const User = require('../models/userModels');
 
 module.exports = {
+  async GetAllMessages(req, res) {
+    const { sender_Id, receiver_Id } = req.params;
+    const conversation = await Conversation.findOne({
+      $or: [
+        {
+          $and: [{'participants.senderId': sender_Id}, {'participants.receiverId': receiver_Id}]
+        },
+        {
+          $and: [{'participants.senderId': receiver_Id}, {'participants.receiverId': sender_Id}]
+        }
+      ]
+    }).select('_id');
+
+    if(conversation) {
+      const messages = await Message.findOne({
+        conversationId: conversation._id
+      });
+      return res.status(HttpStatus.OK).json({message: 'Messages returned', messages});
+    }
+  },
   SendMessage(req, res) {
     const { sender_Id, receiver_Id } = req.params;
 
