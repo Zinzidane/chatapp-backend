@@ -46,7 +46,7 @@ module.exports = {
         .sort({created: -1});
 
       // Get top posts
-      const top = await Post.find({totalLikes: {$gte: 2}})
+      const top = await Post.find({totalLikes: {$gte: 1}})
         .populate('user')
         .sort({created: -1});
 
