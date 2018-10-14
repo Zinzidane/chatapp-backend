@@ -8,6 +8,8 @@ module.exports = {
       .populate('posts.postId')
       .populate('following.userFollowed')
       .populate('followers.follower')
+      .populate('chatList.receiverId')
+      .populate('chatList.msgId')
       .then(result => res.status(HttpStatus.OK).json({message: 'All users', result}))
       .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({message: 'Error occured'}));
   },
@@ -16,6 +18,8 @@ module.exports = {
       .populate('posts.postId')
       .populate('following.userFollowed')
       .populate('followers.follower')
+      .populate('chatList.receiverId')
+      .populate('chatList.msgId')
       .then(result=> res.status(HttpStatus.OK).json({message: 'User by id', result}))
       .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({message: 'Error occured'}));
   },
@@ -24,6 +28,8 @@ module.exports = {
       .populate('posts.postId')
       .populate('following.userFollowed')
       .populate('followers.follower')
+      .populate('chatList.receiverId')
+      .populate('chatList.msgId')
       .then(result=> res.status(HttpStatus.OK).json({message: 'User by name', result}))
       .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({message: 'Error occured'}));
   }
