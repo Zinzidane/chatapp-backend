@@ -119,5 +119,8 @@ module.exports = {
           .catch(error => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({message: 'Error occured'}));
       }
     });
+  },
+  async MarkReceiverMessages(req, res) {
+
   }
 };

@@ -5,33 +5,39 @@ const User = require('../models/userModels');
 module.exports = {
   FollowUser(req, res) {
     const followUser = async () => {
-      await User.update({
+      await User.update(
+        {
           _id: req.user._id,
           // To prevent follow a user more than one time
           "following.userFollowed": {$ne: req.body.userFollowed}
-        }, {
+        }, 
+        {
           $push: {
             following: {
               userFollowed: req.body.userFollowed
             }
           }
-      });
+        }
+      );
 
-      await User.update({
-          _id: req.user.userFollowed,
+      await User.update(
+        {
+          _id: req.body.userFollowed,
           // To prevent follow a user more than one time
-          "following.follower": {$ne: req.body._id}
-        }, {
+          "following.follower": {$ne: req.user._id}
+        }, 
+        {
           $push: {
             followers: {
-              follower: req.body._id
+              follower: req.user._id
             },
             notifications: {
               senderId: req.user._id,
               message: `${req.user.username} is now following you`
             }
           }
-      });
+        }
+      );
     };
 
     followUser()
