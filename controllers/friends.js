@@ -24,7 +24,7 @@ module.exports = {
         {
           _id: req.body.userFollowed,
           // To prevent follow a user more than one time
-          "following.follower": {$ne: req.user._id}
+          "followers.follower": {$ne: req.user._id}
         }, 
         {
           $push: {

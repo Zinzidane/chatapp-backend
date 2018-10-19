@@ -10,8 +10,12 @@ module.exports = {
       .populate('followers.follower')
       .populate('chatList.receiverId')
       .populate('chatList.msgId')
-      .then(result => res.status(HttpStatus.OK).json({message: 'All users', result}))
-      .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({message: 'Error occured'}));
+      .then(result => {
+        res.status(HttpStatus.OK).json({message: 'All users', result});
+      })
+      .catch(err => {
+        res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({message: 'Error occured'});
+      });
   },
   async GetUser(req, res) {
     await User.findOne({_id: req.params.id})
@@ -20,8 +24,12 @@ module.exports = {
       .populate('followers.follower')
       .populate('chatList.receiverId')
       .populate('chatList.msgId')
-      .then(result=> res.status(HttpStatus.OK).json({message: 'User by id', result}))
-      .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({message: 'Error occured'}));
+      .then(result=> {
+        res.status(HttpStatus.OK).json({message: 'User by id', result});
+      })
+      .catch(err => {
+        res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({message: 'Error occured'});
+      });
   },
   async GetUserByName(req, res) {
     await User.findOne({username: req.params.username})
@@ -30,7 +38,11 @@ module.exports = {
       .populate('followers.follower')
       .populate('chatList.receiverId')
       .populate('chatList.msgId')
-      .then(result=> res.status(HttpStatus.OK).json({message: 'User by name', result}))
-      .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({message: 'Error occured'}));
+      .then(result=> {
+        res.status(HttpStatus.OK).json({message: 'User by name', result});
+      })
+      .catch(err => {
+        res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({message: 'Error occured'});
+      });
   }
 };
