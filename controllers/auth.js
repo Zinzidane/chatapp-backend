@@ -10,18 +10,20 @@ const dbConfig = require('../config/secret');
 module.exports = {
   async CreateUser(req, res) {
     const schema = Joi.object().keys({
-      username: Joi.string().min(4).max(20).required(),
+      username: Joi.string().min(3).max(15).required(),
       email: Joi.string().email().required(),
       password: Joi.string().min(5).required(),
     });
 
-    const { error, value } = Joi.validate(req.body, schema);
+    // const { error, value } = Joi.validate(req.body, schema);
 
-    console.log(error);
+    console.log(req.body);
+    // console.log(error);
+    // console.log(error.details);
 
-    if(error & error.details) {
-      return res.status(HttpStatus.BAD_REQUEST).json({msg: error.details});
-    }
+    // if(error & error.details) {
+    //   return res.status(HttpStatus.BAD_REQUEST).json({msg: error.details});
+    // }
 
     const userEmail = await User.findOne({email: helpers.lowerCase(req.body.email)});
 
@@ -35,14 +37,14 @@ module.exports = {
       return res.status(HttpStatus.CONFLICT).json({message: 'Username already exists'});
     }
 
-    return bcrypt.hash(value.password, 10, (err, hash) => {
+    return bcrypt.hash(req.body.password, 10, (err, hash) => {
       if(err) {
         return res.status(HttpStatus.BAD_REQUEST).json({message: 'Error hashing password'});
       }
 
       const body = {
-        username: helpers.firstUpper(value.username),
-        email: helpers.lowerCase(value.email),
+        username: helpers.firstUpper(req.body.username),
+        email: helpers.lowerCase(req.body.email),
         password: hash
       };
 
@@ -84,6 +86,6 @@ module.exports = {
         })
       }).catch(err => {
       return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({message: 'Error occured'});
-    })
+    });
   }
 };

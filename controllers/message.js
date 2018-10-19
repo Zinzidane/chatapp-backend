@@ -34,7 +34,8 @@ module.exports = {
     Conversation.find({
       $or: [
           {participants: {$elemMatch: {senderId: sender_Id, receiverId: receiver_Id}}},
-          {participants: {$elemMatch: {senderId: sender_Id, receiverId: receiver_Id}}}
+          // Reminder for me/ In this place was a bug))
+          {participants: {$elemMatch: {senderId: receiver_Id, receiverId: sender_Id}}}
         ]
       }, async (err, result) => {
         if (result.length > 0) {
