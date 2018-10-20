@@ -10,6 +10,8 @@ const dbConfig = require('./config/secret');
 const server = require('http').createServer(app);
 const io = require('socket.io').listen(server);
 
+const { User } = require('./helpers/UserClass');
+
 require('./socket/streams')(io);
 require('./socket/private')(io);
 
