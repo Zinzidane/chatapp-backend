@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const cors = require('cors');
+const _ = require('lodash');
 
 const app = express();
 const dbConfig = require('./config/secret');
@@ -12,7 +13,7 @@ const io = require('socket.io').listen(server);
 
 const { User } = require('./helpers/UserClass');
 
-require('./socket/streams')(io);
+require('./socket/streams')(io, User, _);
 require('./socket/private')(io);
 
 const auth = require('./routes/authRoutes');
@@ -20,6 +21,7 @@ const posts = require('./routes/postRoutes');
 const users = require('./routes/userRoutes');
 const friends = require('./routes/friendsRoutes');
 const message = require('./routes/messageRoutes');
+const image = require('./routes/imageRoutes');
 
 app.use(cors());
 
@@ -36,6 +38,7 @@ app.use('/api/chatapp', posts);
 app.use('/api/chatapp', users);
 app.use('/api/chatapp', friends);
 app.use('/api/chatapp', message);
+app.use('/api/chatapp', image);
 
 server.listen(3000, () => {
   console.log('Running on port 3000');

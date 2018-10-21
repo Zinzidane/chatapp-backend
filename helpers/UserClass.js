@@ -28,7 +28,9 @@ class User {
   GetList(room) {
     const roomName = this.globalArray.filter(user => user.room === room);
     const names = roomName.map(user => user.name);
-    
+
     return names;
   }
 }
+
+module.exports = { User };
