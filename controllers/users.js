@@ -10,6 +10,7 @@ module.exports = {
       .populate('followers.follower')
       .populate('chatList.receiverId')
       .populate('chatList.msgId')
+      .populate('notifications.senderId')
       .then(result => {
         res.status(HttpStatus.OK).json({message: 'All users', result});
       })
@@ -24,6 +25,7 @@ module.exports = {
       .populate('followers.follower')
       .populate('chatList.receiverId')
       .populate('chatList.msgId')
+      .populate('notifications.senderId')
       .then(result=> {
         res.status(HttpStatus.OK).json({message: 'User by id', result});
       })
@@ -38,6 +40,7 @@ module.exports = {
       .populate('followers.follower')
       .populate('chatList.receiverId')
       .populate('chatList.msgId')
+      .populate('notifications.senderId')
       .then(result=> {
         res.status(HttpStatus.OK).json({message: 'User by name', result});
       })
