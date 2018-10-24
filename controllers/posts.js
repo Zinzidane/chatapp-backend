@@ -1,8 +1,16 @@
 const Joi = require('joi');
 const HttpStatus = require('http-status-codes');
+const cloudinary = require('cloudinary');
 
 const Post = require('../models/postModels');
 const User = require('../models/userModels');
+const keys = require('../config/secret');
+
+cloudinary.config({ 
+  cloud_name: keys.cloud_name, 
+  api_key: keys.api_key, 
+  api_secret: keys.api_secret
+});
 
 module.exports = {
   AddPost(req, res) {
@@ -10,7 +18,11 @@ module.exports = {
       username: Joi.string().required()
     });
 
-    const {error} = Joi.validate(req.body, schema);
+    const body = {
+      post: req.body.post
+    };
+
+    const {error} = Joi.validate(body, schema);
 
     if(error & error.details) {
       return res.status(HttpStatus.BAD_REQUEST).json({msg: error.details});
@@ -23,21 +35,53 @@ module.exports = {
       created: new Date()
     };
     
-    Post.create(body).then(async (post) => {
-      // Updating post in posts array in database for this user
-      await User.update({
-        _id: req.user._id
-      }, {
-        $push: {posts: {
-          postId: post._id,
-          post: req.body.post,
-          created: new Date()
-        }}
+    if(req.body.post && !req.body.image) {
+      Post.create(body).then(async (post) => {
+        // Updating post in posts array in database for this user
+        await User.update({
+          _id: req.user._id
+        }, {
+          $push: {posts: {
+            postId: post._id,
+            post: req.body.post,
+            created: new Date()
+          }}
+        });
+        res.status(HttpStatus.OK).json({message: 'Post created', post});
+      }).catch(err => {
+        res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({message: 'Error occured'});
       });
-      res.status(HttpStatus.OK).json({message: 'Post created', post});
-    }).catch(err => {
-      res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({message: 'Error occured'});
-    });
+    }
+
+    if(req.body.post && req.body.image) {
+      cloudinary.v2.uploader.upload(req.body.image, async (error, result) => {
+        const reqBody = {
+          user: req.user._id,
+          username: req.user.username,
+          post: req.body.post,
+          imgVersion: result.version,
+          imgId: result.public_id,
+          created: new Date()
+        };
+
+        Post.create(reqBody).then(async (post) => {
+          // Updating post in posts array in database for this user
+          await User.update({
+            _id: req.user._id
+          }, {
+            $push: {posts: {
+              postId: post._id,
+              post: req.body.post,
+              created: new Date()
+            }}
+          });
+          res.status(HttpStatus.OK).json({message: 'Post created', post});
+        }).catch(err => {
+          res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({message: 'Error occured'});
+        });
+      });
+    }
+
   },
   async GetAllPosts(req, res) {
     try {
