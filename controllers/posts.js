@@ -1,7 +1,6 @@
 const Joi = require('joi');
 const HttpStatus = require('http-status-codes');
 const cloudinary = require('cloudinary');
-const moment = require('moment');
 const request = require('request');
 
 const Post = require('../models/postModels');
@@ -30,7 +29,7 @@ module.exports = {
       return res.status(HttpStatus.BAD_REQUEST).json({msg: error.details});
     }
 
-    const body = {
+    const postBody = {
       user: req.user._id,
       username: req.user.username,
       post: req.body.post,
@@ -38,7 +37,7 @@ module.exports = {
     };
     
     if(req.body.post && !req.body.image) {
-      Post.create(body).then(async (post) => {
+      Post.create(postBody).then(async (post) => {
         // Updating post in posts array in database for this user
         await User.update({
           _id: req.user._id
@@ -87,10 +86,7 @@ module.exports = {
   },
   async GetAllPosts(req, res) {
     try {
-      const today = moment().startOf('day');
-      const tomorrow = moment(today).add(1, 'days');
-
-      const posts = await Post.find({created: {$gte: today.toDate(), $lt: tomorrow.toDate()}})
+      const posts = await Post.find({})
         .populate('user')
         .sort({created: -1});
 
@@ -110,8 +106,7 @@ module.exports = {
 
       // Get top posts
       const top = await Post.find({
-        totalLikes: {$gte: 1},
-        created: {$gte: today.toDate(), $lt: tomorrow.toDate()}
+        totalLikes: {$gte: 1}
       })
         .populate('user')
         .sort({created: -1});
@@ -142,7 +137,7 @@ module.exports = {
       _id: postId
     }, {
       $push: { comments: {
-        userId: req.username._id,
+        userId: req.user._id,
         username: req.user.username,
         comment: req.body.comment,
         createdAt: new Date()
