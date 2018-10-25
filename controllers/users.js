@@ -102,7 +102,8 @@ module.exports = {
         _id: req.user._id
       }, {
         password: newPassword
-      }).then(()=> {
+      })
+      .then(()=> {
         res.status(HttpStatus.OK).json({message: 'Password changed successfully'});
       })
       .catch(err => {

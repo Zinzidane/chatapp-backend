@@ -76,7 +76,7 @@ const userSchema = mongoose.Schema({
   country: {type: String, default: '' }
 });
 
-userSchema.static.EncryptPassword = async function (password) {
+userSchema.statics.EncryptPassword = async function (password) {
   const hash = await bcrypt.hash(password, 10);
   return hash;
 }
