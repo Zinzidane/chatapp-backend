@@ -86,9 +86,13 @@ module.exports = {
   },
   async GetAllPosts(req, res) {
     try {
+
+      console.log(req.query.offset);
       const posts = await Post.find({})
         .populate('user')
-        .sort({created: -1});
+        .sort({created: -1})
+        .skip(+req.query.offset)
+        .limit(+req.query.limit);
 
       const user = await User.findOne({
         _id: req.user._id
