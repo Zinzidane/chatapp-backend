@@ -2,6 +2,7 @@ const Joi = require('joi');
 const HttpStatus = require('http-status-codes');
 const cloudinary = require('cloudinary');
 const moment = require('moment');
+const request = require('request');
 
 const Post = require('../models/postModels');
 const User = require('../models/userModels');
@@ -92,6 +93,20 @@ module.exports = {
       const posts = await Post.find({created: {$gte: today.toDate(), $lt: tomorrow.toDate()}})
         .populate('user')
         .sort({created: -1});
+
+      const user = await User.findOne({
+        _id: req.user._id
+      });
+      if(user.city === '' && user.country === '') {
+        request('https://geoip-db.com/json/', {json: true}, async (err, res, body) => {
+          await User.update({
+            _id: req.user._id
+          }, {
+            city: body.city,
+            country: body.country
+          });
+        }); 
+      }
 
       // Get top posts
       const top = await Post.find({
