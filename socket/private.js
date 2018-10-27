@@ -11,6 +11,7 @@ module.exports = function(io) {
 
     socket.on('stop_typing', data => {
       io.to(data.receiver).emit('has_stopped_typing', data);
+      console.log(data.receiver);
     });
   });
 }

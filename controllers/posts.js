@@ -110,10 +110,12 @@ module.exports = {
 
       // Get top posts
       const top = await Post.find({
-        totalLikes: {$gte: 1}
+        totalLikes: {$gte: 2}
       })
         .populate('user')
-        .sort({created: -1});
+        .sort({totalLikes: -1})
+        .skip(+req.query.offset)
+        .limit(+req.query.limit);
 
       return res.status(HttpStatus.OK).json({message: 'All posts', posts, top});
     } catch (err) {
