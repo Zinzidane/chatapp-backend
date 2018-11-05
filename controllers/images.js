@@ -2,7 +2,7 @@ const cloudinary = require('cloudinary');
 const HttpStatus = require('http-status-codes');
 
 const User = require('../models/userModels');
-const keys = require('../config/secret');
+const keys = require('../config/keys');
 
 cloudinary.config({ 
   cloud_name: keys.cloud_name, 

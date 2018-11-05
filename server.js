@@ -6,7 +6,7 @@ const cors = require('cors');
 const _ = require('lodash');
 
 const app = express();
-const dbConfig = require('./config/secret');
+const dbConfig = require('./config/keys');
 
 const server = require('http').createServer(app);
 const io = require('socket.io').listen(server);
